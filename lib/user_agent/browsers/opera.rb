@@ -6,6 +6,14 @@ class UserAgent
           (agent.application && agent.application.product == 'Opera')
       end
 
+      def browser
+        if mini?
+          return 'Opera Mini'
+        else
+          super
+        end
+      end
+
       def version
         if mini?
           application.comment.detect{|c| c =~ /Opera Mini/}[/Opera Mini\/([\d\.]+)/, 1] rescue nil
@@ -43,7 +51,7 @@ class UserAgent
       end
 
       def os
-        if application.comment.nil?
+        if application.comment.nil? || mini?
           nil
         elsif application.comment[0] =~ /Windows/
           OperatingSystems.normalize_os(application.comment[0])
